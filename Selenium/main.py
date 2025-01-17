@@ -26,7 +26,9 @@ WebDriverWait(driver,10).until(
     EC.presence_of_element_located((By.XPATH, '//*[@id="pageContent"]/div[3]/div/div[1]/div/div/div/div/div/div[7]'))
 )
 time.sleep(5)
-body = driver.find_element(By.TAG_NAME, 'body')
+bar = driver.find_element(By.CLASS_NAME, 'thumb-vertical')
+print("variable var: ver que tiene dentro ---- ",bar)
+body = driver.find_element(By.CLASS_NAME, 'main-view')
 body.screenshot("captura.png")
 #screenshot_path = "captura_visibilidad.png"
 #driver.save_screenshot(screenshot_path)
