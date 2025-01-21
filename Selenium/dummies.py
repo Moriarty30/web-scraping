@@ -4,6 +4,12 @@ from PIL import Image
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+
+
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 
 def fullpage_screenshot(driver, file):
     print("Iniciando captura de pantalla de página completa...")
@@ -83,10 +89,17 @@ def fullpage_screenshot(driver, file):
 # EJEMPLO DE USO
 # ---------------------------------------------------------
 if __name__ == "__main__":
-    from selenium import webdriver
-    from selenium.webdriver.common.keys import Keys
 
-    driver = webdriver.Chrome()
+
+    # Configurar opciones de Chrome
+    chrome_options = Options()
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--headless")  # Opcional, para ejecución sin interfaz gráfica
+    chrome_options.add_argument("--user-data-dir=/var/jenkins_home/workspace/Selenium/chrome-data")
+
+
+    driver = webdriver.Chrome(options=chrome_options)
     url = os.getenv("WARENA")
     username = os.getenv("USERNAME_GRAFANA")
     password = os.getenv("PASSWORD_GRAFANA")
