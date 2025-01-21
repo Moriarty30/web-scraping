@@ -100,9 +100,13 @@ if __name__ == "__main__":
 
 
     driver = webdriver.Chrome(options=chrome_options)
+    
     url = os.getenv("WARENA")
     username = os.getenv("USERNAME_GRAFANA")
     password = os.getenv("PASSWORD_GRAFANA")
+    print(f"url: {url}, username: {username}, password: {password}")
+    if not isinstance(url, str) or not url:
+        raise ValueError("La variable de entorno 'WARENA' no está definida o no es válida.")
     try:
         driver.get(url)
         driver.maximize_window()
