@@ -87,6 +87,8 @@ if __name__ == "__main__":
     from selenium.webdriver.common.keys import Keys
 
     driver = webdriver.Chrome()
+    username = os.getenv("USERNAME_GRAFANA")
+    password = os.getenv("PASSWORD_GRAFANA")
     try:
         driver.get("https://data-prod-p.superpay.com.co/d/ddxhbqolrre9se/w-arena?orgId=1&refresh=1m")
         driver.maximize_window()
@@ -96,9 +98,9 @@ if __name__ == "__main__":
             EC.presence_of_element_located((By.XPATH, '//*[@id=":r0:"]'))
         )
         input_user = driver.find_element(By.XPATH, '//*[@id=":r0:"]')
-        input_user.send_keys("Cristian.giraldo@superpay.com.co")
+        input_user.send_keys(username)
         input_password = driver.find_element(By.XPATH, '//*[@id=":r1:"]')
-        input_password.send_keys("30102000" + Keys.ENTER)
+        input_password.send_keys(password + Keys.ENTER)
 
         # Esperamos que cargue el dashboard:
         WebDriverWait(driver, 10).until(
