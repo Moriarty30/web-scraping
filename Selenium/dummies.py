@@ -87,10 +87,11 @@ if __name__ == "__main__":
     from selenium.webdriver.common.keys import Keys
 
     driver = webdriver.Chrome()
+    url = os.getenv("WARENA")
     username = os.getenv("USERNAME_GRAFANA")
     password = os.getenv("PASSWORD_GRAFANA")
     try:
-        driver.get("https://data-prod-p.superpay.com.co/d/ddxhbqolrre9se/w-arena?orgId=1&refresh=1m")
+        driver.get(url)
         driver.maximize_window()
 
         # Login de ejemplo
