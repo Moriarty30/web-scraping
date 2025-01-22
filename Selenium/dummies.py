@@ -97,6 +97,7 @@ if __name__ == "__main__":
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--headless") 
+    chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--user-data-dir=/var/jenkins_home/workspace/Selenium/chrome-data")
 
     service = Service(executable_path=chromedriver_path)
@@ -125,12 +126,15 @@ if __name__ == "__main__":
         input_password.send_keys(password + Keys.ENTER)
 
         # Esperamos que cargue el dashboard:
-        WebDriverWait(driver, 10).until(
+        WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, ".scrollbar-view"))
         )
 
         # Llamamos a la función para la screenshot completa
         fullpage_screenshot(driver, "dashboard_fullpage.png")
 
+    except Exception as e:
+        print(f"Error durante la ejecución: {str(e)}")
+        driver.save_screenshot("error.png")  # Captura el estado en caso de error
     finally:
         driver.quit()
