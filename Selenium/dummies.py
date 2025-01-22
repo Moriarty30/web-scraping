@@ -107,18 +107,18 @@ if __name__ == "__main__":
 
     service = Service(executable_path=chromedriver_path)
     driver = webdriver.Chrome(service=service, options=chrome_options)
-    
 
+    url = os.getenv("WARENA")
+    username = os.getenv("USERNAME_GRAFANA")
+    password = os.getenv("PASSWORD_GRAFANA")
+        
+    if not isinstance(url, str) or not url:
+        ValueError(f"url: {url}, username: {username}, password: {password}")
+        raise ValueError("La variable de entorno 'WARENA' no está definida o no es válida.")
+        
     try:
 
-        url = os.getenv("WARENA")
-        username = os.getenv("USERNAME_GRAFANA")
-        password = os.getenv("PASSWORD_GRAFANA")
-        
-        if not isinstance(url, str) or not url:
-            ValueError(f"url: {url}, username: {username}, password: {password}")
-            raise ValueError("La variable de entorno 'WARENA' no está definida o no es válida.")
-        
+
         driver.get(url)
         driver.maximize_window()
         time.sleep(2)  # Espera para evitar capturas con la página a medio render
