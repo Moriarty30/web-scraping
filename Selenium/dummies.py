@@ -100,8 +100,7 @@ if __name__ == "__main__":
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--user-data-dir=/var/jenkins_home/workspace/Selenium/chrome-data")
 
-    service = Service(executable_path=chromedriver_path)
-
+    service = Service(executable_path=chromedriver_path, log_path="chromedriver.log")
     driver = webdriver.Chrome(service=service, options=chrome_options)
     
     url = os.getenv("WARENA")
@@ -129,9 +128,10 @@ if __name__ == "__main__":
 
         # Esperamos que cargue el dashboard:
         WebDriverWait(driver, 30).until(
-            EC.presence_of_element_located((By.XPATH, '//*[@id="pageContent"]/div[3]/div/div[1]'))
+            EC.presence_of_element_located((By.CLASS_NAME, 'scrollbar-view'))
         )
-        elemento = driver.find_element(By.XPATH, '//*[@id="pageContent"]/div[3]/div/div[1]')
+        time.sleep(5) 
+        elemento = driver.find_element(By.CLASS_NAME, 'scrollbar-view')
         print(f"Elemento no encontrado: {elemento}")
 
         # Llamamos a la función para la screenshot completa
