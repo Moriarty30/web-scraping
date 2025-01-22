@@ -104,8 +104,9 @@ if __name__ == "__main__":
     url = os.getenv("WARENA")
     username = os.getenv("USERNAME_GRAFANA")
     password = os.getenv("PASSWORD_GRAFANA")
-    print(f"url: {url}, username: {username}, password: {password}")
+    
     if not isinstance(url, str) or not url:
+        ValueError(f"url: {url}, username: {username}, password: {password}")
         raise ValueError("La variable de entorno 'WARENA' no está definida o no es válida.")
     try:
         driver.get(url)
