@@ -90,7 +90,7 @@ def fullpage_screenshot(driver, file):
 # ---------------------------------------------------------
 if __name__ == "__main__":
 
-    chromedriver_path = "/var/jenkins_home/workspace/Selenium/Selenium/chromedriver"
+    #chromedriver_path = "/var/jenkins_home/workspace/Selenium/Selenium/chromedriver"
 
     """
     # Configurar opciones de Chrome
@@ -101,10 +101,10 @@ if __name__ == "__main__":
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--user-data-dir=/var/jenkins_home/workspace/Selenium/chrome-data")
     """
-    
-    service = Service(executable_path=chromedriver_path)
+
+    #service = Service(executable_path=chromedriver_path)
     #driver = webdriver.Chrome(service=service, options=chrome_options)
-    driver = webdriver.Chrome(executable_path=chromedriver_path)
+    driver = webdriver.Chrome()
     url = os.getenv("WARENA")
     username = os.getenv("USERNAME_GRAFANA")
     password = os.getenv("PASSWORD_GRAFANA")
