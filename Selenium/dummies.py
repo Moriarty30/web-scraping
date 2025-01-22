@@ -126,13 +126,15 @@ if __name__ == "__main__":
 
         # Login de ejemplo
         WebDriverWait(driver, 20).until(
-            EC.presence_of_element_located((By.ID, "input-wrapper"))
+            EC.presence_of_element_located((By.XPATH, '//*[@id=":r0:"]'))
         )
         input_user = driver.find_element(By.XPATH, '//*[@id=":r0:"]')
         input_user.send_keys(username)
         input_password = driver.find_element(By.XPATH, '//*[@id=":r1:"]')
         input_password.send_keys(password + Keys.ENTER)
         print("Login exitoso")
+        time.sleep(2)  # Espera para evitar capturas con la página a medio render
+        driver.save_screenshot("login_exitoso.png")
 
         # Esperamos que cargue el dashboard:
         WebDriverWait(driver, 30).until(
