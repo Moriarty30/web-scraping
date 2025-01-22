@@ -10,6 +10,8 @@ from selenium.webdriver.common.keys import Keys
 
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+import tempfile
+import shutil
 
 def fullpage_screenshot(driver, file):
     print("Iniciando captura de pantalla de página completa...")
@@ -91,31 +93,35 @@ def fullpage_screenshot(driver, file):
 if __name__ == "__main__":
 
     chromedriver_path = "/var/jenkins_home/workspace/Selenium/Selenium/chromedriver"
-
     
     # Configurar opciones de Chrome
     chrome_options = Options()
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--headless") 
+    chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--user-data-dir=/var/jenkins_home/workspace/Selenium/chrome-data")
     
+    # Usar un directorio temporal único para evitar conflictos
+    user_data_dir = tempfile.mkdtemp()
+    chrome_options.add_argument(f"--user-data-dir={user_data_dir}")
 
     service = Service(executable_path=chromedriver_path)
     driver = webdriver.Chrome(service=service, options=chrome_options)
     
-    url = os.getenv("WARENA")
-    username = os.getenv("USERNAME_GRAFANA")
-    password = os.getenv("PASSWORD_GRAFANA")
-    
-    if not isinstance(url, str) or not url:
-        ValueError(f"url: {url}, username: {username}, password: {password}")
-        raise ValueError("La variable de entorno 'WARENA' no está definida o no es válida.")
+
     try:
+
+        url = os.getenv("WARENA")
+        username = os.getenv("USERNAME_GRAFANA")
+        password = os.getenv("PASSWORD_GRAFANA")
+        
+        if not isinstance(url, str) or not url:
+            ValueError(f"url: {url}, username: {username}, password: {password}")
+            raise ValueError("La variable de entorno 'WARENA' no está definida o no es válida.")
+        
         driver.get(url)
         driver.maximize_window()
-        time.sleep(1)  # Espera para evitar capturas con la página a medio render
+        time.sleep(2)  # Espera para evitar capturas con la página a medio render
         driver.save_screenshot("pagina_cargada.png")
 
         # Login de ejemplo
