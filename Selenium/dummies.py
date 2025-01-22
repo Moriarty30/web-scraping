@@ -10,8 +10,6 @@ from selenium.webdriver.common.keys import Keys
 
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-import tempfile
-import shutil
 
 def fullpage_screenshot(driver, file):
     print("Iniciando captura de pantalla de página completa...")
@@ -91,54 +89,58 @@ def fullpage_screenshot(driver, file):
 # EJEMPLO DE USO
 # ---------------------------------------------------------
 if __name__ == "__main__":
-    # Configurar ChromeDriver
+
     chromedriver_path = "/var/jenkins_home/workspace/Selenium/Selenium/chromedriver"
+
+    
+    # Configurar opciones de Chrome
     chrome_options = Options()
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--headless") 
     chrome_options.add_argument("--disable-gpu")
-
-    # Crear un directorio temporal único para evitar conflictos
-    user_data_dir = tempfile.mkdtemp()
-    chrome_options.add_argument(f"--user-data-dir={user_data_dir}")
+    chrome_options.add_argument("--user-data-dir=/var/jenkins_home/workspace/Selenium/chrome-data")
+    
 
     service = Service(executable_path=chromedriver_path)
     driver = webdriver.Chrome(service=service, options=chrome_options)
-
+    
+    url = os.getenv("WARENA")
+    username = os.getenv("USERNAME_GRAFANA")
+    password = os.getenv("PASSWORD_GRAFANA")
+    
+    if not isinstance(url, str) or not url:
+        ValueError(f"url: {url}, username: {username}, password: {password}")
+        raise ValueError("La variable de entorno 'WARENA' no está definida o no es válida.")
     try:
-        url = os.getenv("WARENA")
-        username = os.getenv("USERNAME_GRAFANA")
-        password = os.getenv("PASSWORD_GRAFANA")
-
-        if not url or not username or not password:
-            raise ValueError("Las variables de entorno no están configuradas correctamente.")
-
         driver.get(url)
         driver.maximize_window()
-        WebDriverWait(driver, 30).until(
+        time.sleep(1)  # Espera para evitar capturas con la página a medio render
+        driver.save_screenshot("pagina_cargada.png")
+
+        # Login de ejemplo
+        WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.ID, "input-wrapper"))
         )
-
-        # Realizar login
         input_user = driver.find_element(By.XPATH, '//*[@id=":r0:"]')
         input_user.send_keys(username)
         input_password = driver.find_element(By.XPATH, '//*[@id=":r1:"]')
         input_password.send_keys(password + Keys.ENTER)
+        print("Login exitoso")
 
-        # Esperar que el dashboard cargue
+        # Esperamos que cargue el dashboard:
         WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.CLASS_NAME, 'scrollbar-view'))
         )
-        time.sleep(5)  # Esperar para que gráficos dinámicos terminen de cargar
+        time.sleep(5) 
+        elemento = driver.find_element(By.CLASS_NAME, 'scrollbar-view')
+        print(f"Elemento no encontrado: {elemento}")
 
-        # Capturar pantalla completa
+        # Llamamos a la función para la screenshot completa
         fullpage_screenshot(driver, "dashboard_fullpage.png")
 
     except Exception as e:
         print(f"Error durante la ejecución: {str(e)}")
-        driver.save_screenshot("error.png")
-        print(driver.page_source)
+        driver.save_screenshot("error.png")  # Captura el estado en caso de error
     finally:
         driver.quit()
-        shutil.rmtree(user_data_dir) 
