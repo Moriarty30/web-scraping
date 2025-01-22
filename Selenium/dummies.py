@@ -92,6 +92,7 @@ if __name__ == "__main__":
 
     chromedriver_path = "/var/jenkins_home/workspace/Selenium/Selenium/chromedriver"
 
+    """
     # Configurar opciones de Chrome
     chrome_options = Options()
     chrome_options.add_argument("--no-sandbox")
@@ -99,10 +100,11 @@ if __name__ == "__main__":
     #chrome_options.add_argument("--headless") 
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--user-data-dir=/var/jenkins_home/workspace/Selenium/chrome-data")
-
-    service = Service(executable_path=chromedriver_path)
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    """
     
+    service = Service(executable_path=chromedriver_path)
+    #driver = webdriver.Chrome(service=service, options=chrome_options)
+    driver = webdriver.Chrome(executable_path=chromedriver_path)
     url = os.getenv("WARENA")
     username = os.getenv("USERNAME_GRAFANA")
     password = os.getenv("PASSWORD_GRAFANA")
