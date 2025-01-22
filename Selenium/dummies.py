@@ -114,7 +114,7 @@ if __name__ == "__main__":
 
         # Login de ejemplo
         WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, '//*[@id=":r0:"]'))
+            EC.presence_of_element_located((By.XPATH, '//*[@id="pageContent"]/div[3]/div/div/div[2]/div/div/form'))
         )
         input_user = driver.find_element(By.XPATH, '//*[@id=":r0:"]')
         input_user.send_keys(username)
