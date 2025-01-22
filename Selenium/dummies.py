@@ -90,16 +90,16 @@ def fullpage_screenshot(driver, file):
 # ---------------------------------------------------------
 if __name__ == "__main__":
 
-
+    """
     # Configurar opciones de Chrome
     chrome_options = Options()
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--headless")  # Opcional, para ejecución sin interfaz gráfica
     chrome_options.add_argument("--user-data-dir=/var/jenkins_home/workspace/Selenium/chrome-data")
+    """
 
-
-    driver = webdriver.Chrome(options=chrome_options)
+    driver = webdriver.Chrome()
     
     url = os.getenv("WARENA")
     username = os.getenv("USERNAME_GRAFANA")
@@ -109,25 +109,38 @@ if __name__ == "__main__":
         ValueError(f"url: {url}, username: {username}, password: {password}")
         raise ValueError("La variable de entorno 'WARENA' no está definida o no es válida.")
     try:
+
+
         driver.get(url)
         driver.maximize_window()
+        time.sleep(2)  # Espera para evitar capturas con la página a medio render
+        driver.save_screenshot("pagina_cargada.png")
 
         # Login de ejemplo
-        WebDriverWait(driver, 10).until(
+        WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.XPATH, '//*[@id=":r0:"]'))
         )
         input_user = driver.find_element(By.XPATH, '//*[@id=":r0:"]')
         input_user.send_keys(username)
         input_password = driver.find_element(By.XPATH, '//*[@id=":r1:"]')
         input_password.send_keys(password + Keys.ENTER)
+        print("Login exitoso")
+        time.sleep(5)  # Espera para evitar capturas con la página a medio render
+        driver.save_screenshot("login_exitoso.png")
 
         # Esperamos que cargue el dashboard:
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, ".scrollbar-view"))
+        WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'scrollbar-view'))
         )
+        time.sleep(5) 
+        elemento = driver.find_element(By.CLASS_NAME, 'scrollbar-view')
+        print(f"Elemento no encontrado: {elemento}")
 
         # Llamamos a la función para la screenshot completa
         fullpage_screenshot(driver, "dashboard_fullpage.png")
 
+    except Exception as e:
+        print(f"Error durante la ejecución: {str(e)}")
+        driver.save_screenshot("error.png")  # Captura el estado en caso de error
     finally:
         driver.quit()
