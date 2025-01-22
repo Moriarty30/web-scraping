@@ -113,10 +113,11 @@ if __name__ == "__main__":
     try:
         driver.get(url)
         driver.maximize_window()
+        driver.save_screenshot("pagina_cargada.png")
 
         # Login de ejemplo
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, '//*[@id="pageContent"]/div[3]/div/div/div[2]/div/div/form'))
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.ID, "input-wrapper"))
         )
         input_user = driver.find_element(By.XPATH, '//*[@id=":r0:"]')
         input_user.send_keys(username)
