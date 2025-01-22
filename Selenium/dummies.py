@@ -114,6 +114,7 @@ if __name__ == "__main__":
     try:
         driver.get(url)
         driver.maximize_window()
+        time.sleep(1)  # Espera para evitar capturas con la página a medio render
         driver.save_screenshot("pagina_cargada.png")
 
         # Login de ejemplo
@@ -124,11 +125,13 @@ if __name__ == "__main__":
         input_user.send_keys(username)
         input_password = driver.find_element(By.XPATH, '//*[@id=":r1:"]')
         input_password.send_keys(password + Keys.ENTER)
+        print("Login exitoso")
 
         # Esperamos que cargue el dashboard:
-        WebDriverWait(driver, 20).until(
+        WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, ".scrollbar-view"))
         )
+        print(f"Elemento no encontrado: {driver.find_element(By.CSS_SELECTOR, '.scrollbar-view')}")
 
         # Llamamos a la función para la screenshot completa
         fullpage_screenshot(driver, "dashboard_fullpage.png")
