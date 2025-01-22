@@ -131,7 +131,8 @@ if __name__ == "__main__":
         WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.XPATH, '//*[@id="pageContent"]/div[3]/div/div[1]'))
         )
-        print(f"Elemento no encontrado: {driver.find_element(By.XPATH, '//*[@id="pageContent"]/div[3]/div/div[1]')}")
+        elemento = driver.find_element(By.XPATH, '//*[@id="pageContent"]/div[3]/div/div[1]')
+        print(f"Elemento no encontrado: {elemento}")
 
         # Llamamos a la función para la screenshot completa
         fullpage_screenshot(driver, "dashboard_fullpage.png")
