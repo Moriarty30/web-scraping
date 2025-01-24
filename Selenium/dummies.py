@@ -109,6 +109,7 @@ if __name__ == "__main__":
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
     url = os.getenv("WARENA")
+    urlSG = os.getenv("SGMOVIL")
     username = os.getenv("USERNAME_GRAFANA")
     password = os.getenv("PASSWORD_GRAFANA")
         
@@ -133,8 +134,15 @@ if __name__ == "__main__":
         input_password = driver.find_element(By.XPATH, '//*[@id=":r1:"]')
         input_password.send_keys(password + Keys.ENTER)
         print("Login exitoso")
-        time.sleep(2)  # Espera para evitar capturas con la página a medio render
+        time.sleep(5)  # Espera para evitar capturas con la página a medio render
         driver.save_screenshot("login_exitoso.png")
+
+        item1 = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
+        item1.click()
+        time.sleep(2)
+        item2 = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/button[1]') 
+        item2.click()
+        time.sleep(2)
 
         # Esperamos que cargue el dashboard:
         WebDriverWait(driver, 30).until(
@@ -150,5 +158,48 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Error durante la ejecución: {str(e)}")
         driver.save_screenshot("error.png")  # Captura el estado en caso de error
+    
+    try:
+        driver.get(urlSG)
+        driver.maximize_window()
+        time.sleep(2)  # Espera para evitar capturas con la página a medio render
+        driver.save_screenshot("pagina_cargada.png")
+
+        # Login de ejemplo
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id=":r0:"]'))
+        )
+        input_user = driver.find_element(By.XPATH, '//*[@id=":r0:"]')
+        input_user.send_keys(username)
+        input_password = driver.find_element(By.XPATH, '//*[@id=":r1:"]')
+        input_password.send_keys(password + Keys.ENTER)
+        print("Login exitoso")
+        time.sleep(5)  # Espera para evitar capturas con la página a medio render
+        driver.save_screenshot("login_exitoso.png")
+
+        item1 = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
+        item1.click()
+        time.sleep(2)
+        item2 = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/button[1]') 
+        item2.click()
+        time.sleep(2)
+
+        # Esperamos que cargue el dashboard:
+        WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'scrollbar-view'))
+        )
+        time.sleep(5) 
+        elemento = driver.find_element(By.CLASS_NAME, 'scrollbar-view')
+        print(f"Elemento no encontrado: {elemento}")
+
+        # Llamamos a la función para la screenshot completa
+        fullpage_screenshot(driver, "dashboard_fullpage.png")
+        
+    
+    except:
+        print(f"Error durante la ejecución: {str(e)}")
+        driver.save_screenshot("error.png")
+    
+    
     finally:
         driver.quit()
