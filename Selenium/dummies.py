@@ -132,6 +132,11 @@ if __name__ == "__main__":
         item2.click()
         time.sleep(2)
 
+        if driver.find_element(By.XPATH, '//*[@id="pageContent"]/div[3]/div/div[1]/div/div/div/div/div/div[21]/div').get_attribute("class") == "dashboard-row dashboard-row--collapsed":
+            driver.find_element(By.XPATH, '//*[@id="pageContent"]/div[3]/div/div[1]/div/div/div/div/div/div[21]/div').click()
+        else:
+            print("Elemento no encontrado")
+
         # Esperamos que cargue el dashboard:
         WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.CLASS_NAME, 'scrollbar-view'))
