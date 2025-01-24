@@ -8,9 +8,6 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-
 def fullpage_screenshot(driver, file):
     print("Iniciando captura de pantalla de página completa...")
 
@@ -57,7 +54,7 @@ def fullpage_screenshot(driver, file):
         print(f"Desplazado a scrollTop={current_position}")
         
         # Espera 1 segundo para que el dashboard se refresque
-        time.sleep(1)
+        time.sleep(1.5)
 
         # 10) Captura de pantalla
         file_name = f"part_{part}.png"
@@ -102,6 +99,7 @@ if __name__ == "__main__":
     driver = webdriver.Chrome()
     
     url = os.getenv("WARENA")
+    urlSG = os.getenv("SGMOVIL")
     username = os.getenv("USERNAME_GRAFANA")
     password = os.getenv("PASSWORD_GRAFANA")
     
@@ -109,12 +107,11 @@ if __name__ == "__main__":
         ValueError(f"url: {url}, username: {username}, password: {password}")
         raise ValueError("La variable de entorno 'WARENA' no está definida o no es válida.")
     try:
-
-
+        # Bloque para la primera URL
         driver.get(url)
         driver.maximize_window()
         time.sleep(2)  # Espera para evitar capturas con la página a medio render
-        driver.save_screenshot("pagina_cargada.png")
+        #driver.save_screenshot("pagina_cargada_warena.png")
 
         # Login de ejemplo
         WebDriverWait(driver, 20).until(
@@ -124,23 +121,62 @@ if __name__ == "__main__":
         input_user.send_keys(username)
         input_password = driver.find_element(By.XPATH, '//*[@id=":r1:"]')
         input_password.send_keys(password + Keys.ENTER)
-        print("Login exitoso")
-        time.sleep(5)  # Espera para evitar capturas con la página a medio render
-        driver.save_screenshot("login_exitoso.png")
+        print("Login exitoso en WARENA")
+        time.sleep(5)
+        #driver.save_screenshot("login_exitoso_warena.png")
+
+        item1 = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
+        item1.click()
+        time.sleep(2)
+        item2 = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/button[1]')
+        item2.click()
+        time.sleep(2)
 
         # Esperamos que cargue el dashboard:
         WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.CLASS_NAME, 'scrollbar-view'))
         )
-        time.sleep(5) 
-        elemento = driver.find_element(By.CLASS_NAME, 'scrollbar-view')
-        print(f"Elemento no encontrado: {elemento}")
-
-        # Llamamos a la función para la screenshot completa
-        fullpage_screenshot(driver, "dashboard_fullpage.png")
+        time.sleep(5)
+        fullpage_screenshot(driver, "dashboard_fullpage_warena.png")
 
     except Exception as e:
-        print(f"Error durante la ejecución: {str(e)}")
-        driver.save_screenshot("error.png")  # Captura el estado en caso de error
+        print(f"Error durante la ejecución en WARENA: {str(e)}")
+        driver.save_screenshot("error_warena.png")
+
+    # Segundo bloque para la segunda URL
+    try:
+        driver.get(urlSG)
+        driver.maximize_window()
+        time.sleep(5)
+        #driver.save_screenshot("pagina_cargada_sg.png")
+
+        # Login de ejemplo
+        """       
+         WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id=":r0:"]'))
+        )
+        input_user = driver.find_element(By.XPATH, '//*[@id=":r0:"]')
+        input_user.send_keys(username)
+        input_password = driver.find_element(By.XPATH, '//*[@id=":r1:"]')
+        input_password.send_keys(password + Keys.ENTER)
+        print("Login exitoso en SGMOVIL")"""
+        #time.sleep(5)
+        #driver.save_screenshot("login_exitoso_sg.png")
+
+        item = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/button[1]')
+        item.click()
+        time.sleep(2)
+
+        # Esperamos que cargue el dashboard:
+        WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'scrollbar-view'))
+        )
+        time.sleep(5)
+        fullpage_screenshot(driver, "dashboard_fullpage_sg.png")
+
+    except Exception as e:
+        print(f"Error durante la ejecución en SGMOVIL: {str(e)}")
+        driver.save_screenshot("error_sg.png")
+
     finally:
         driver.quit()
