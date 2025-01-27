@@ -59,7 +59,7 @@ def fullpage_screenshot(driver, file):
         print(f"Desplazado a scrollTop={current_position}")
         
         # Espera 1 segundo para que el dashboard se refresque
-        time.sleep(1)
+        time.sleep(2)
 
         # 10) Captura de pantalla
         file_name = f"part_{part}.png"
@@ -123,7 +123,7 @@ if __name__ == "__main__":
         driver.get(url)
         driver.maximize_window()
         time.sleep(2)  # Espera para evitar capturas con la página a medio render
-        driver.save_screenshot("pagina_cargada.png")
+        #driver.save_screenshot("pagina_cargada.png")
 
         # Login de ejemplo
         WebDriverWait(driver, 20).until(
@@ -135,7 +135,7 @@ if __name__ == "__main__":
         input_password.send_keys(password + Keys.ENTER)
         print("Login exitoso")
         time.sleep(5)  # Espera para evitar capturas con la página a medio render
-        driver.save_screenshot("login_exitoso.png")
+        #driver.save_screenshot("login_exitoso.png")
 
         item1 = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
         item1.click()
@@ -153,11 +153,11 @@ if __name__ == "__main__":
         print(f"Elemento no encontrado: {elemento}")
 
         # Llamamos a la función para la screenshot completa
-        fullpage_screenshot(driver, "dashboard_fullpage.png")
+        fullpage_screenshot(driver, "dashboard_fullpage_warena.png")
 
     except Exception as e:
         print(f"Error durante la ejecución: {str(e)}")
-        driver.save_screenshot("error.png")  # Captura el estado en caso de error
+        driver.save_screenshot("error_warena.png")  # Captura el estado en caso de error
     
     # Segundo bloque para la segunda URL
     try:

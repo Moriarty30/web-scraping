@@ -31,8 +31,8 @@ msg['Subject'] = asunto
 msg.attach(MIMEText(message, 'plain'))
 
 # Adjuntar archivos
-ruta_sg = 'dashboard_fullpage_sg.png'
-ruta_warena = 'dashboard_fullpage_warena.png'
+ruta_sg = '../dashboard_fullpage_sg.png'
+ruta_warena = '../dashboard_fullpage_warena.png'
 
 print(f"Ruta SG: {ruta_sg}, Ruta Warena: {ruta_warena}")
 attach_file(msg, ruta_sg)
