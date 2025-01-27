@@ -41,6 +41,7 @@ print(f"Ruta SG: {ruta_sg}, Ruta Warena: {ruta_warena}")
 attach_file(msg, ruta_sg)
 attach_file(msg, ruta_warena)
 
+print(f'Credenciales: {username}, {password}')
 # Enviar el correo
 with smtplib.SMTP('smtp.gmail.com', 587) as server:
     server.starttls()
