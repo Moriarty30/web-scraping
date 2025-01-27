@@ -45,17 +45,10 @@ print(f'Credenciales: {username}, {password}')
 # Enviar el correo
 try:
     with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        server.set_debuglevel(1)  # Depuración habilitada
         server.starttls()
         server.login(username, password)
         server.sendmail(username, to, msg.as_string())
-        print('Email sent')
-        
-except smtplib.SMTPRecipientsRefused as e:
-    print(f"Error: Algunos destinatarios fueron rechazados: {e.recipients}")
-except smtplib.SMTPAuthenticationError:
-    print("Error: Falló la autenticación SMTP. Verifica tu usuario y contraseña.")
+        print("Correo enviado exitosamente.")
 except Exception as e:
-    print(f"Error inesperado: {str(e)}")
-finally:
-    server.quit()
-
+    print(f"Error enviando correo: {e}")
