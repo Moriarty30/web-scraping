@@ -146,28 +146,13 @@ if __name__ == "__main__":
 
     except Exception as e:
         print(f"Error durante la ejecución en WARENA: {str(e)}")
-        driver.save_screenshot("error_warena.png")
+        driver.save_screenshot("/Selenium/error_warena.png")
 
     # Segundo bloque para la segunda URL
     try:
         driver.get(urlSG)
         driver.maximize_window()
         time.sleep(5)
-        #driver.save_screenshot("pagina_cargada_sg.png")
-
-        # Login de ejemplo
-        """       
-         WebDriverWait(driver, 20).until(
-            EC.presence_of_element_located((By.XPATH, '//*[@id=":r0:"]'))
-        )
-        input_user = driver.find_element(By.XPATH, '//*[@id=":r0:"]')
-        input_user.send_keys(username)
-        input_password = driver.find_element(By.XPATH, '//*[@id=":r1:"]')
-        input_password.send_keys(password + Keys.ENTER)
-        print("Login exitoso en SGMOVIL")"""
-        #time.sleep(5)
-        #driver.save_screenshot("login_exitoso_sg.png")
-
         item = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/button[1]')
         item.click()
         time.sleep(2)
