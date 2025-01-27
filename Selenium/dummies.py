@@ -173,11 +173,46 @@ if __name__ == "__main__":
             EC.presence_of_element_located((By.CLASS_NAME, 'scrollbar-view'))
         )
         time.sleep(5)
+
+        #expandir dashboard paneles mes
+        elemento = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="pageContent"]/div[3]/div/div[1]/div/div/div/div/div/div[21]/div'))
+        )
+        
+        # Obtener el atributo de clase del elemento
+        clase = elemento.get_attribute("class")
+        print(f"Atributo 'class' del elemento: {clase}")
+
+        # Verificar si el elemento está colapsado
+        if "dashboard-row--collapsed" in clase:
+            print("El elemento está colapsado, haciendo clic para expandirlo.")
+            elemento.click()
+        else:
+            print("El elemento ya está expandido, no se requiere acción.")
+        
+        #expandir dashboard pestaña paneles general
+        elemento = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="pageContent"]/div[3]/div/div[1]/div/div/div/div/div/div[8]/div'))
+        )
+        
+        # Obtener el atributo de clase del elemento
+        clase = elemento.get_attribute("class")
+        print(f"Atributo 'class' del elemento: {clase}")
+
+        # Verificar si el elemento está colapsado
+        if "dashboard-row--collapsed" in clase:
+            print("El elemento está colapsado, haciendo clic para expandirlo.")
+            elemento.click()
+        else:
+            print("El elemento ya está expandido, no se requiere acción.")
+#Tomar captura de pantalla
         fullpage_screenshot(driver, "dashboard_fullpage_sg.png")
 
     except Exception as e:
-        print(f"Error durante la ejecución en SGMOVIL: {str(e)}")
-        driver.save_screenshot("error_sg.png")
+            print(f"Error durante la ejecución en SGMOVIL: {str(e)}")
+            driver.save_screenshot("error_sg.png")
 
     finally:
         driver.quit()
+
+

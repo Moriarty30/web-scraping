@@ -45,7 +45,7 @@ print(f'Credenciales: {username}, {password}')
 # Enviar el correo
 try:
     with smtplib.SMTP('smtp.gmail.com', 587) as server:
-        server.set_debuglevel(1)  # Depuración habilitada
+        #server.set_debuglevel(1)  # Depuración habilitada
         server.starttls()
         server.login(username, password)
         server.sendmail(username, to, msg.as_string())
