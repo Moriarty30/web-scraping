@@ -8,7 +8,7 @@ import os
 # Configuración
 username = os.getenv("USERNAME")
 password = os.getenv("PASSWORD")
-to = os.getenv("TO").split(',')
+to = (lambda x: x.split(',') if x else [])(os.getenv("TO"))
 
 asunto = "mensaje de prueba desde python"
 message = "Este correo tiene los pantallazos de los dashboards de WARENA y SGMOVIL"

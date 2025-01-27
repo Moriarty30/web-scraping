@@ -92,7 +92,7 @@ def fullpage_screenshot(driver, file):
 # ---------------------------------------------------------
 if __name__ == "__main__":
 
-    chromedriver_path = "/var/jenkins_home/workspace/Selenium/Selenium/chromedriver"
+    chromedriver_path = "/var/jenkins_home/workspace/Dashboards/Selenium/chromedriver"
     
     # Configurar opciones de Chrome
     chrome_options = Options()
