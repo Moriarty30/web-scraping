@@ -31,8 +31,11 @@ msg['Subject'] = asunto
 msg.attach(MIMEText(message, 'plain'))
 
 # Adjuntar archivos
-ruta_sg = '../dashboard_fullpage_sg.png'
-ruta_warena = '../dashboard_fullpage_warena.png'
+ruta_actual = os.path.dirname(os.path.abspath(__file__))
+
+# Construir las rutas absolutas de las imágenes
+ruta_sg = os.path.join(ruta_actual, '../dashboard_fullpage_sg.png')
+ruta_warena = os.path.join(ruta_actual, '../dashboard_fullpage_warena.png')
 
 print(f"Ruta SG: {ruta_sg}, Ruta Warena: {ruta_warena}")
 attach_file(msg, ruta_sg)
