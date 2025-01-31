@@ -86,45 +86,39 @@ def fullpage_screenshot(driver, file):
     print(f"Captura completa guardada en: {file}")
     return True
 
+def dashboard():
+    return None;
 
 # ---------------------------------------------------------
 # EJEMPLO DE USO
 # ---------------------------------------------------------
 if __name__ == "__main__":
 
-    """    
-    chromedriver_path = "/var/jenkins_home/workspace/Selenium/Selenium/chromedriver"
-    
+    """
     # Configurar opciones de Chrome
     chrome_options = Options()
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-gpu")
-    
-    # Usar un directorio temporal único para evitar conflictos
-    user_data_dir = tempfile.mkdtemp()
-    chrome_options.add_argument(f"--user-data-dir={user_data_dir}")
-
-    service = Service(executable_path=chromedriver_path)
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    chrome_options.add_argument("--headless")  # Opcional, para ejecución sin interfaz gráfica
+    chrome_options.add_argument("--user-data-dir=/var/jenkins_home/workspace/Selenium/chrome-data")
     """
+
     driver = webdriver.Chrome()
+    
     url = os.getenv("WARENA")
+    urlSG = os.getenv("SGMOVIL")
     username = os.getenv("USERNAME_GRAFANA")
     password = os.getenv("PASSWORD_GRAFANA")
-        
+    
     if not isinstance(url, str) or not url:
         ValueError(f"url: {url}, username: {username}, password: {password}")
         raise ValueError("La variable de entorno 'WARENA' no está definida o no es válida.")
-        
     try:
-
-
+        # Bloque para la primera URL
         driver.get(url)
         driver.maximize_window()
         time.sleep(2)  # Espera para evitar capturas con la página a medio render
-        driver.save_screenshot("pagina_cargada.png")
+        #driver.save_screenshot("pagina_cargada_warena.png")
 
         # Login de ejemplo
         WebDriverWait(driver, 20).until(
@@ -134,39 +128,166 @@ if __name__ == "__main__":
         input_user.send_keys(username)
         input_password = driver.find_element(By.XPATH, '//*[@id=":r1:"]')
         input_password.send_keys(password + Keys.ENTER)
-        print("Login exitoso")
-        time.sleep(5)  # Espera para evitar capturas con la página a medio render
-        driver.save_screenshot("login_exitoso.png")
+        print("Login exitoso en WARENA")
+        time.sleep(5)
+        item1 = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
+        item1.click()
+        time.sleep(2)
+        item2 = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/button[1]')
+        item2.click()
+        time.sleep(2)
+        #driver.save_screenshot("login_exitoso_warena.png")
+#------------------------------------------------------------------
+#Expandir panels del dashboard
+#------------------------------------------------------------------
+        #expandir dashboard paneles mes
+        elemento = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="pageContent"]/div[3]/div/div[1]/div/div/div/div/div/div[21]/div'))
+        )
         
-        barra1 = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div/div[1]/div[2]/div[2]/button')
-        barra1.click()
+        # Obtener el atributo de clase del elemento
+        clase = elemento.get_attribute("class")
+        print(f"Atributo 'class' del elemento: {clase}")
+
+        # Verificar si el elemento está colapsado
+        if "dashboard-row dashboard-row--collapsed" in clase:
+            print("El elemento está colapsado, haciendo clic para expandirlo.")
+            elemento.click()
+        else:
+            print("El elemento ya está expandido, no se requiere acción.")
+        
+        #expandir dashboard pestaña paneles general
+        elemento2 = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="pageContent"]/div[3]/div/div[1]/div/div/div/div/div/div[40]/div'))
+        )
+        
+        # Obtener el atributo de clase del elemento
+        clase = elemento2.get_attribute("class")
+        print(f"Atributo 'class' del elemento: {clase}")
         time.sleep(2)
-        barra2 = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/button[1]') 
-        barra2.click()
+        # Verificar si el elemento está colapsado
+        if "dashboard-row dashboard-row--collapsed" in clase:
+            print("El elemento está colapsado, haciendo clic para expandirlo.")
+            elemento2.click()
+        else:
+            print("El elemento ya está expandido, no se requiere acción.")
+
+        #tabla de datos
+        #expandir dashboard pestaña paneles general
+        elemento2 = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="pageContent"]/div[3]/div/div[1]/div/div/div/div/div/div[67]/div'))
+        )
+        
+        # Obtener el atributo de clase del elemento
+        clase = elemento2.get_attribute("class")
+        print(f"Atributo 'class' del elemento: {clase}")
         time.sleep(2)
+        # Verificar si el elemento está colapsado
+        if "dashboard-row dashboard-row--collapsed" in clase:
+            print("El elemento está colapsado, haciendo clic para expandirlo.")
+            elemento2.click()
+        else:
+            print("El elemento ya está expandido, no se requiere acción.")
+
+
         # Esperamos que cargue el dashboard:
         WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.CLASS_NAME, 'scrollbar-view'))
         )
-        time.sleep(5) 
-        elemento = driver.find_element(By.CLASS_NAME, 'scrollbar-view')
-        print(f"Elemento no encontrado: {elemento}")
-
-        if EC.presence_of_element_located((By.CLASS_NAME, 'dashboard-row dashboard-row--collapsed')):
-            clickButton = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div/main/div/div/div[3]/div/div[1]/div/div/div/div/div/div[21]/div/button')
-            clickButton.click()
-            time.sleep(5)
-
-        variable = True if not EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div[1]/div/main/div/div/div[3]/div/div[1]/div/div/div/div/div/div[23]/div/div/div[3]/div/div/div/div')) else False;
-        variable2 = True if  EC.presence_of_element_located((By.XPATH, '/html/body/div[1]/div[1]/div/main/div/div/div[3]/div/div[1]/div/div/div/div/div/div[23]/div/div/div[3]/div/div/div/div')) else False;
-        print(f"Resultados: {variable} y {variable2}")
-
-
-        # Llamamos a la función para la screenshot completa
-        fullpage_screenshot(driver, "dashboard_fullpage.png")
+        time.sleep(5)
+#------------------------------------------------------------------
+#Expandir panels del dashboard
+#------------------------------------------------------------------
+        fullpage_screenshot(driver, "dashboard_fullpage_warena.png")
 
     except Exception as e:
-        print(f"Error durante la ejecución: {str(e)}")
-        driver.save_screenshot("error.png")  # Captura el estado en caso de error
+        print(f"Error durante la ejecución en WARENA: {str(e)}")
+        driver.save_screenshot("/Selenium/error_warena.png")
+
+#---------------------------------------------------------
+    # Segundo bloque para la segunda URL
+#---------------------------------------------------------
+        
+    try:
+        driver.get(urlSG)
+        driver.maximize_window()
+        time.sleep(5)
+        item = driver.find_element(By.XPATH, '/html/body/div[1]/div[1]/div/div[1]/div/div[2]/button[1]')
+        item.click()
+        time.sleep(2)
+
+        # Esperamos que cargue el dashboard:
+        WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'scrollbar-view'))
+        )
+        time.sleep(5)
+#------------------------------------------------------------------
+#Expandir panels del dashboard
+#------------------------------------------------------------------
+        #expandir dashboard paneles mes
+        elemento = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="pageContent"]/div[3]/div/div[1]/div/div/div/div/div/div[21]/div'))
+        )
+        
+        # Obtener el atributo de clase del elemento
+        clase = elemento.get_attribute("class")
+        print(f"Atributo 'class' del elemento: {clase}")
+
+        # Verificar si el elemento está colapsado
+        if "dashboard-row dashboard-row--collapsed" in clase:
+            print("El elemento está colapsado, haciendo clic para expandirlo.")
+            elemento.click()
+        else:
+            print("El elemento ya está expandido, no se requiere acción.")
+        
+        #expandir dashboard pestaña paneles general
+        elemento2 = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="pageContent"]/div[3]/div/div[1]/div/div/div/div/div/div[42]/div'))
+        )
+        
+        # Obtener el atributo de clase del elemento
+        clase = elemento2.get_attribute("class")
+        print(f"Atributo 'class' del elemento: {clase}")
+        time.sleep(2)
+        # Verificar si el elemento está colapsado
+        if "dashboard-row dashboard-row--collapsed" in clase:
+            print("El elemento está colapsado, haciendo clic para expandirlo.")
+            elemento2.click()
+        else:
+            print("El elemento ya está expandido, no se requiere acción.")
+
+        #tabla de datos
+        #expandir dashboard pestaña paneles general
+        elemento2 = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="pageContent"]/div[3]/div/div[1]/div/div/div/div/div/div[66]/div'))
+        )
+        
+        # Obtener el atributo de clase del elemento
+        clase = elemento2.get_attribute("class")
+        print(f"Atributo 'class' del elemento: {clase}")
+        time.sleep(2)
+        # Verificar si el elemento está colapsado
+        if "dashboard-row dashboard-row--collapsed" in clase:
+            print("El elemento está colapsado, haciendo clic para expandirlo.")
+            elemento2.click()
+        else:
+            print("El elemento ya está expandido, no se requiere acción.")
+
+
+        # Esperamos que cargue el dashboard:
+        WebDriverWait(driver, 30).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'scrollbar-view'))
+        )
+        time.sleep(5)
+#------------------------------------------------------------------
+#Expandir panels del dashboard
+#------------------------------------------------------------------
+
+        fullpage_screenshot(driver, "dashboard_fullpage_sg.png")
+
+    except Exception as e:
+        print(f"Error durante la ejecución en SGMOVIL: {str(e)}")
+        driver.save_screenshot("error_sg.png")
+        
     finally:
         driver.quit()
